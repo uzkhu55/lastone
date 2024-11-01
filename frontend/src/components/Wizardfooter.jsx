@@ -34,6 +34,8 @@ const Wizardfooter = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
     setIsLoggedIn(false);
     router.push("/");
   };

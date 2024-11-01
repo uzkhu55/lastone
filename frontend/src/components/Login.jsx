@@ -20,12 +20,11 @@ const LoginPage = () => {
           password,
         }
       );
+      console.log(response.data);
 
       if (response.data.success) {
-        // Store token and username in localStorage
         localStorage.setItem("token", response.data.token); // Save token from response
-        // Example of storing the username
-        localStorage.setItem("username", "asd");
+        localStorage.setItem("username", response.data.user.username); // Save the actual username from the response
 
         toast.success("Login successful!"); // Show success toast
         setTimeout(() => {
