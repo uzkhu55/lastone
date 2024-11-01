@@ -21,12 +21,6 @@ function UserProfileCard() {
     checkLoginStatus();
   }, []);
 
-  // Function to handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove the token from local storage
-    setIsLoggedIn(false); // Update login status
-  };
-
   return (
     <div className="relative ml-[80px] text-white p-4 rounded-md">
       <img
@@ -47,12 +41,6 @@ function UserProfileCard() {
         ) : (
           <>
             <span className="font-extrabold text-2xl">Welcome back!</span>
-            <button
-              onClick={handleLogout}
-              className="ml-4 font-extrabold text-2xl text-red-500"
-            >
-              Log out
-            </button>
           </>
         )}
       </div>
