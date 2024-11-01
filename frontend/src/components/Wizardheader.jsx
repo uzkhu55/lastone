@@ -34,7 +34,7 @@ const Wizardheader = ({ username }) => {
 
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/users/heart-count",
+        "https://magicword.onrender.com/api/users/heart-count",
         {
           params: { username: loggedInUsername }, // Use the logged-in username
         }
@@ -47,7 +47,9 @@ const Wizardheader = ({ username }) => {
   };
   const qracahbutton = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/users/qr");
+      const response = await axios.get(
+        "https://magicword.onrender.com/api/users/qr"
+      );
       setNeg(response);
     } catch (error) {
       console.error("Error fetching heart count:", error);
@@ -100,7 +102,7 @@ const Wizardheader = ({ username }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/users/add-heart-slot",
+        "https://magicword.onrender.com/api/users/add-heart-slot",
         { username }
       );
 

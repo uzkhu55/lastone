@@ -66,7 +66,7 @@ const Wizardfooter = () => {
     if (storedUsername && storedUsername === trimmedUsername) {
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/users/admin-heart-slot",
+          "https://magicword.onrender.com/api/users/admin-heart-slot",
           { username: trimmedUsername }
         );
         setFeedbackMessage(response.data.message);

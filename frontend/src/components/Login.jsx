@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/users/login",
+        "https://magicword.onrender.com/api/users/login",
         {
           email,
           password,

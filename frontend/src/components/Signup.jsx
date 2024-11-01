@@ -41,7 +41,7 @@ const SignUpPage = () => {
     try {
       // Send signup request
       const response = await axios.post(
-        "http://localhost:8000/api/users/signup",
+        "https://magicword.onrender.com/api/users/signup",
         {
           username,
           email,
@@ -73,7 +73,7 @@ const SignUpPage = () => {
       console.log(email, "emailemailemailemail");
 
       const response = await axios.post(
-        "http://localhost:8000/api/users/verify-otp",
+        "https://magicword.onrender.com/api/users/verify-otp",
         {
           email,
           otp,
