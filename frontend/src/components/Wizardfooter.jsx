@@ -7,35 +7,42 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify"; // Import toast
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+
 const Wizardfooter = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [usernameToSearch, setUsernameToSearch] = useState("");
+  const [userDetails, setUserDetails] = useState(null); // State to hold user details
+  const [adminUsername, setAdminUsername] = useState(""); // State for admin username
   const modalRef = useRef(null);
   const [uploadImages, setUploadImages] = useState([]); // State for uploaded image URLs
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [imageExists, setImageExists] = useState(false);
 
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem("token");
-      if (token) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-        router.push("/");
-      }
+      setIsLoggedIn(!!token);
+      if (!token) router.push("/signup");
     };
     checkLoginStatus();
   }, [router]);
 
+  // Get username from local storage on component mount
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    if (username) {
+      setAdminUsername(username); // Set the admin username state
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-
     setIsLoggedIn(false);
     router.push("/");
   };
@@ -54,11 +61,10 @@ const Wizardfooter = () => {
     };
   }, [isModalOpen, isModalOpen1, isModalOpen2]);
 
-  // Load images from local storage on mount
   useEffect(() => {
     const savedImages = JSON.parse(localStorage.getItem("uploadImages")) || [];
-    console.log("Loaded images from local storage:", savedImages); // Debugging log
     setUploadImages(savedImages);
+    setImageExists(savedImages.length > 0); // Check if images already exist
   }, []);
 
   const handleAddHeartSlot = async () => {
@@ -83,6 +89,26 @@ const Wizardfooter = () => {
     }
   };
 
+  const fetchUserByUsername = async () => {
+    const trimmedUsername = usernameToSearch.trim();
+    if (!trimmedUsername) {
+      toast.error("Please enter a username.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `https://magicword.onrender.com/api/user/${trimmedUsername}`
+      );
+      setUserDetails(response.data); // Update state with fetched user details
+      toast.success("User found!"); // Show success toast
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      toast.error("User not found."); // Show error toast
+      setUserDetails(null); // Reset user details on error
+    }
+  };
+
   const cloud_name = "dbldfhlfy"; // Replace with your Cloudinary cloud name
   const upload_preset = "uzkhu55"; // Replace with your Cloudinary upload preset
   const url = `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`;
@@ -102,18 +128,16 @@ const Wizardfooter = () => {
             },
           });
 
-          return res.data.secure_url; // Return the uploaded image URL
+          return res.data.secure_url;
         })
       );
 
-      // Update the state with the uploaded image URLs
       const updatedUploadImages = [...uploadImages, ...uploadedImageUrls];
-      console.log("Uploaded image URLs:", updatedUploadImages); // Debugging log
       setUploadImages(updatedUploadImages); // Update the state with the uploaded image URLs
       setSelectedImage(uploadedImageUrls[0]); // Set the first uploaded image as selected (optional)
       setFeedbackMessage("Images uploaded successfully!"); // Set success message
+      setImageExists(true); // Indicate that images exist now
 
-      // Save the updated image URLs to local storage
       localStorage.setItem("uploadImages", JSON.stringify(updatedUploadImages));
     } catch (error) {
       console.error("Image upload failed:", error.response.data);
@@ -149,19 +173,23 @@ const Wizardfooter = () => {
           >
             <div className="flex justify-between items-center">
               <div>
-                <img
-                  className="w-[75px] h-[75px] rounded-full"
-                  src={uploadImages[0]}
-                  alt=""
-                />
+                {imageExists ? (
+                  <img
+                    className="w-[75px] h-[75px] rounded-full"
+                    src={uploadImages[0]}
+                    alt="Profile"
+                  />
+                ) : (
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="w-[100px]"
+                  />
+                )}
               </div>
-              <input
-                className="w-[100px]"
-                type="file"
-                multiple
-                onChange={handleImageUpload}
-              />
-              <div className="font-extrabold">ADMIN</div>
+              {/* Display the username from local storage */}
+              <div className="font-extrabold">{adminUsername || "ADMIN"}</div>
             </div>
             <div className="flex mt-4 flex-col items-center justify-between h-[80%] pt-4 gap-2">
               <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
@@ -174,8 +202,8 @@ const Wizardfooter = () => {
                 type="text"
                 value={usernameToSearch}
                 onChange={(e) => setUsernameToSearch(e.target.value)}
-                placeholder="            Enter username"
-                className="w-[363px] h-[53px] p-2 rounded-lg font-extrabold text-2xl bg-[#000122]"
+                placeholder="          Enter username"
+                className="w-[363px] h-[53px] p-2  rounded-lg font-extrabold text-2xl bg-[#000122]"
               />
               <button
                 className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]"
@@ -183,7 +211,15 @@ const Wizardfooter = () => {
               >
                 Add Heart Slot
               </button>
-
+              {feedbackMessage && <p>{feedbackMessage}</p>}
+              {userDetails && (
+                <div className="flex flex-col text-white">
+                  <p>Username: {userDetails.username}</p>
+                  <p>Email: {userDetails.email}</p>
+                  <p>Points: {userDetails.points}</p>
+                  {/* Add more fields as necessary */}
+                </div>
+              )}
               <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
                 Settings
               </button>

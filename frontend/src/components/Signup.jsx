@@ -8,6 +8,7 @@ const SignUpPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [images, setImages] = useState([]);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -37,7 +38,6 @@ const SignUpPage = () => {
       setError("Password must be at least 8 characters long.");
       return;
     }
-
     try {
       // Send signup request
       const response = await axios.post(
@@ -46,6 +46,7 @@ const SignUpPage = () => {
           username,
           email,
           password,
+          images,
         }
       );
 
@@ -194,6 +195,12 @@ const SignUpPage = () => {
             >
               Sign Up
             </button>
+            <p className="mt-4 text-center text-sm text-black">
+              Already have an account?{" "}
+              <a href="/login" className="text-blue-600 hover:underline">
+                Log in
+              </a>
+            </p>
           </form>
         ) : (
           <form onSubmit={handleVerifyOtp} className="mt-6">
@@ -222,13 +229,6 @@ const SignUpPage = () => {
             </button>
           </form>
         )}
-
-        <p className="mt-4 text-center text-sm text-black">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Log in
-          </a>
-        </p>
       </div>
     </div>
   );

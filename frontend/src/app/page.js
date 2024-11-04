@@ -1,7 +1,6 @@
 "use client";
-import Header from "@/components/Header";
-import UserProfileCard from "@/components/UserProfileCard";
 
+import Play from "@/components/Play";
 import React from "react";
 
 function App() {
@@ -11,10 +10,9 @@ function App() {
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Rowdies:wght@300;400;700&display=swap"
         rel="stylesheet"
       ></link>
-      <Header />
       <div className="flex flex-row">
         <div className="p-4 flex-grow">
-          <UserProfileCard />
+          <Play />
         </div>
       </div>
     </div>

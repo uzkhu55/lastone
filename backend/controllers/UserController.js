@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: "uzkhuthef@gmail.com", // Your Gmail address
-    pass: "isks vchs wpzp vtxk",
+    user: process.env.EMAIL_USER, // Use environment variable
+    pass: process.env.EMAIL_PASS, // Use environment variable
   },
   logger: true,
   debug: true,
@@ -20,19 +20,21 @@ const transporter = nodemailer.createTransport({
 
 const sendOtpEmail = async (to, otp) => {
   const mailOptions = {
-    from: "usuhuu.hades@gmail.com", // Your Gmail address
-    to: to, // Recipient address
-    subject: "Your OTP Code", // Subject line
-    text: `Your OTP code is: ${otp}`, // Plain text body
+    from: process.env.EMAIL_USER, // Use environment variable
+    to, // Recipient address
+    subject: "Your OTP Code",
+    text: `Your OTP code is: ${otp}`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error sending OTP email:", error); // Log email errors
+  }
 };
 
 export const createUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, images } = req.body;
 
   try {
     // Check if email is already registered
@@ -44,18 +46,18 @@ export const createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const otp = crypto.randomInt(100000, 999999).toString();
 
     await sendOtpEmail(email, otp);
-
     await Otp.create({ email, otp });
 
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
+      isAdmin: false,
       isVerified: false,
+      images,
     });
 
     await newUser.save();
@@ -67,17 +69,16 @@ export const createUser = async (req, res) => {
       userId: newUser._id,
     });
   } catch (error) {
+    console.error("Error creating user:", error); // Log errors
     res.status(500).json({ success: false, message: "Failed to create user." });
   }
 };
 
 export const verifyOtp = async (req, res) => {
   const { otp, email } = req.body;
-
   try {
     const otpEntry = await Otp.findOne({ email });
-
-    if (!otpEntry || otpEntry.otp != otp) {
+    if (!otpEntry || otpEntry.otp !== otp) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid or expired OTP." });
@@ -95,6 +96,7 @@ export const verifyOtp = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error("Error verifying OTP:", error); // Log errors
     res
       .status(500)
       .json({ success: false, message: "OTP verification failed." });

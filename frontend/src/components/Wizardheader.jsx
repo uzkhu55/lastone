@@ -7,12 +7,52 @@ import { toast, ToastContainer } from "react-toastify"; // Import toast
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 import QR from "qrcode-base64";
 
-const Wizardheader = ({ username }) => {
+const Wizardheader = ({ username, setHeartCount, heartCount }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [heartCount, setHeartCount] = useState(0);
+  const [leaderboardData, setLeaderboardData] = useState([]);
+
+  const fetchLeaderboardData = async () => {
+    try {
+      const response = await axios.get(
+        "https://magicword.onrender.com/api/users/leaderboard"
+      );
+      setLeaderboardData(response.data); // Assuming your API returns an array of leaderboard items
+    } catch (error) {
+      // Initialize the error message
+      let errorMessage = "Failed to load leaderboard data.";
+
+      // Check for response from the server
+      if (error.response) {
+        // Server responded with a status code
+        errorMessage += ` Status: ${error.response.status}.`;
+        if (error.response.data && error.response.data.message) {
+          errorMessage += ` Message: ${error.response.data.message}`;
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage += " No response received from the server.";
+      } else {
+        // Something else caused the error
+        errorMessage += ` Error: ${error.message}`;
+      }
+
+      // Log the complete error for debugging
+      console.error("Error fetching leaderboard data:", error);
+
+      // Display an error message to the user
+      toast.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen2) {
+      fetchLeaderboardData(); // Fetch data when the leaderboard modal opens
+    }
+  }, [isModalOpen2]);
+
   const [neg, setNeg] = useState();
   const modalRef = useRef(null);
   var imgData = QR.drawImg(
@@ -166,13 +206,6 @@ const Wizardheader = ({ username }) => {
             </div>
             <div className="flex mt-4 flex-col items-center justify-between h-[80%] pt-4 gap-2">
               <div className="flex items-center w-[363px] justify-between">
-                <div className="w-[83px]">Daily</div>
-                <div>10,000₮</div>
-                <button className="w-[93px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                  Авах
-                </button>
-              </div>
-              <div className="flex items-center w-[363px] justify-between">
                 <div className="w-[83px]">1 Heart Slot</div>
                 <div>10,000₮</div>
                 <button
@@ -182,37 +215,8 @@ const Wizardheader = ({ username }) => {
                   Авах
                 </button>
               </div>
-              <div className="flex items-center w-[363px] justify-between">
-                <div className="w-[83px]">Full heart</div>
-                <div>1,000₮</div>
-                <button className="w-[93px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                  Авах
-                </button>
-              </div>
-              <div className="flex items-center w-[363px] justify-between">
-                <div className="w-[83px]">Everyday</div>
-                <div>1,000₮ Сарын</div>
-                <button className="w-[93px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                  Авах
-                </button>
-              </div>
-              <div className="flex items-center w-[363px] justify-between">
-                <div className="w-[83px]">VIP</div>
-                <div>99,999₮</div>
-                <button className="w-[93px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                  Авах
-                </button>
-              </div>
-              <div className="flex items-center w-[363px] justify-between">
-                <div className="w-[83px]">Level Up</div>
-                <div>10,000₮</div>
-                <button className="w-[93px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                  Авах
-                </button>
-              </div>
             </div>
           </div>
-          {/* <img src={imgData} alt="" /> */}
         </div>
       )}
       {isModalOpen1 && (
@@ -260,7 +264,14 @@ const Wizardheader = ({ username }) => {
               <h2 className="text-2xl font-bold">Rewards</h2>
             </div>
             <div className="flex mt-4 flex-col items-center justify-between h-[80%] pt-4 gap-2">
-              <div></div>
+              {leaderboardData.map((item, index) => (
+                <div key={item.username} className="flex  gap-16 w-full">
+                  <div>{index + 1}</div>
+                  <div>{item.username}</div>
+                  <div>{item.points}</div>
+                  <div>{item.rewards}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

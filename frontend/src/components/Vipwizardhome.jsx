@@ -19,7 +19,6 @@ const Vipwizardhome = () => {
           type="text"
         />
       </div>
-
       <button href="/">
         <img
           className="w-[240px] h-[170px]"

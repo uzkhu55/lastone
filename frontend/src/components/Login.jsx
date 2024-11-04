@@ -28,7 +28,7 @@ const LoginPage = () => {
 
         toast.success("Login successful!"); // Show success toast
         setTimeout(() => {
-          router.push("/"); // Redirect to homepage after a delay
+          router.push("/newwizardhome"); // Redirect to homepage after a delay
         }, 2000); // Delay for 2 seconds
       } else {
         toast.error(response.data.message); // Show error message from response
