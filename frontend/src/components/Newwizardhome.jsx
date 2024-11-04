@@ -224,12 +224,15 @@ const Newwizardhome = ({ setHeartCount, heartCount }) => {
             ref={modalRef}
           >
             <div className="flex justify-between items-center">
-              <button
-                onClick={() => setIsAddRewardModalOpen(true)}
-                className="text-1xl font-bold mb-4"
-              >
-                Become magician
-              </button>
+              {/* Check if the user is an admin */}
+              {localStorage.getItem("username") === "Admin" && ( // Replace 'adminUsername' with the actual admin username
+                <button
+                  onClick={() => setIsAddRewardModalOpen(true)}
+                  className="text-1xl font-bold mb-4"
+                >
+                  Become magician
+                </button>
+              )}
               <h2 className="text-2xl font-bold mb-4">Choose Your Reward</h2>
             </div>
             <div className="flex flex-col gap-2">
