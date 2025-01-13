@@ -164,9 +164,9 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
   };
 
   return (
-    <div className="flex justify-evenly items-center mx-16">
+    <div className="flex flex-col md:flex-wrap  items-center mx-4 justify-between md:h-[72px] h-[130px] md:mx-16">
       <button onClick={() => setIsModalOpen(true)}>
-        <div className="p-2 px-8 text-2xl text-white w-[430px] justify-between mt-6 bg-[#1e1e3a] rounded-2xl flex gap-[100px]">
+        <div className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] md:mt-6 text-sm justify-between mt-2 bg-[#1e1e3a] rounded-2xl flex">
           <div className="flex gap-[4px] items-center">
             {Array.from({ length: heartCount }).map((_, index) => (
               <FontAwesomeIcon
@@ -184,18 +184,18 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
       </button>
       <button
         onClick={() => setIsModalOpen1(true)}
-        className="p-2 px-8 text-2xl text-white w-[430px] justify-center bg-[#1e1e3a] mt-6 rounded-2xl flex gap-[100px]"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Task
       </button>
       <button
         onClick={() => setIsModalOpen2(true)}
-        className="p-2 px-8 text-2xl text-white w-[430px] justify-center bg-[#1e1e3a] mt-6 rounded-2xl flex gap-[100px]"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Leaderboard
       </button>
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-start px-[90px] bg-opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center gap-4 justify-start w-[414px] md:w-[580px] md:px-[90px] bg-opacity-100 z-50">
           <div
             ref={modalRef}
             className="bg-[#1e1e3a] p-6 rounded-lg text-white h-[80%] max-w-[430px] w-full"
@@ -220,7 +220,7 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
         </div>
       )}
       {isModalOpen1 && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-center px-[90px] bg-opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center gap-4 justify-center md:px-[90px] bg-opacity-100 z-50">
           <div
             ref={modalRef}
             className="bg-[#1e1e3a] p-6 rounded-lg text-white h-[80%] max-w-[430px] w-full"
@@ -252,7 +252,7 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
         </div>
       )}
       {isModalOpen2 && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-end px-[90px] bg-opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center gap-4 justify-end md:px-[90px] bg-opacity-100 z-50">
           <div
             ref={modalRef}
             className="bg-[#1e1e3a] p-6 rounded-lg text-white h-[80%] max-w-[430px] w-full"
@@ -276,7 +276,7 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
           </div>
         </div>
       )}
-      <ToastContainer /> {/* Add ToastContainer for notifications */}
+      <ToastContainer />
     </div>
   );
 };

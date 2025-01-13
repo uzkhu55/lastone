@@ -1,258 +1,163 @@
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+// "use client";
+// import { faHeart } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import axios from "axios";
+// import { useEffect, useRef, useState } from "react";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// import QR from "qrcode-base64";
 
-const Newwizardhome = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
-  const [responseMessage, setResponseMessage] = useState("");
-  const [pointsAdded, setPointsAdded] = useState(0);
-  const [selectedReward, setSelectedReward] = useState("");
-  const [selectedCode, setSelectedCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [title, setTitle] = useState("");
-  const [titlePassword, setTitlePassword] = useState("");
-  const [isAddRewardModalOpen, setIsAddRewardModalOpen] = useState(false);
-  const [rewards, setRewards] = useState([]);
-  const [isPasswordIncorrect, setIsPasswordIncorrect] = useState(false); // Track password state
-  const modalRef = useRef(null);
+// const Wizardheader = ({ username, setHeartCount, heartCount }) => {
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [isModalOpen1, setIsModalOpen1] = useState(false);
+//   const [isModalOpen2, setIsModalOpen2] = useState(false);
+//   const [leaderboardData, setLeaderboardData] = useState([]);
 
-  // Fetch rewards from the server when the modal opens
-  const fetchRewards = async () => {
-    try {
-      const response = await axios.get(
-        "https://magicword.onrender.com/api/users/rewards"
-      );
-      setRewards(response.data);
-    } catch (error) {
-      console.error("Error fetching rewards:", error);
-    }
-  };
+//   const fetchLeaderboardData = async () => {
+//     try {
+//       const response = await axios.get(
+//         "https://magicword.onrender.com/api/users/leaderboard"
+//       );
+//       setLeaderboardData(response.data);
+//     } catch (error) {
+//       const errorMessage =
+//         error.response?.data?.message ||
+//         error.message ||
+//         "Failed to load leaderboard data.";
+//       console.error("Error fetching leaderboard data:", error);
+//       toast.error(errorMessage);
+//     }
+//   };
 
-  const handleRewardClick = (reward) => {
-    setSelectedReward(reward.title);
-    setSelectedCode(reward.password);
-    setPassword("");
-    setIsModalOpen(false);
-  };
+//   useEffect(() => {
+//     if (isModalOpen2) {
+//       fetchLeaderboardData();
+//     }
+//   }, [isModalOpen2]);
 
-  const handlePostReward = async () => {
-    const selected = rewards.find((reward) => reward.password === selectedCode);
-    const username = localStorage.getItem("username");
+//   const fetchHeartCount = async () => {
+//     const loggedInUsername = localStorage.getItem("username");
+//     if (!loggedInUsername) {
+//       setHeartCount(0);
+//       return;
+//     }
+//     try {
+//       const response = await axios.get(
+//         "https://magicword.onrender.com/api/users/heart-count",
+//         { params: { username: loggedInUsername } }
+//       );
+//       setHeartCount(response.data.heartCount || 0);
+//     } catch (error) {
+//       console.error("Error fetching heart count:", error);
+//     }
+//   };
 
-    // Initialize randomPoints
-    let randomPoints = 0;
+//   useEffect(() => {
+//     fetchHeartCount();
+//     const handleClickOutside = (event) => {
+//       if (
+//         (isModalOpen || isModalOpen1 || isModalOpen2) &&
+//         modalRef.current &&
+//         !modalRef.current.contains(event.target)
+//       ) {
+//         setIsModalOpen(false);
+//         setIsModalOpen1(false);
+//         setIsModalOpen2(false);
+//       }
+//     };
 
-    // Generate a random number of points between 10 and 800
-    if (username) {
-      randomPoints = Math.floor(Math.random() * (800 - 10 + 1)) + 10;
+//     window.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       window.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [isModalOpen, isModalOpen1, isModalOpen2]);
 
-      try {
-        // Add points to the user
-        await axios.post(
-          `https://magicword.onrender.com/api/users/add-points`,
-          {
-            username: username,
-            points: randomPoints,
-          }
-        );
+//   const handleHeartSlotClick = async () => {
+//     const username = localStorage.getItem("username");
+//     if (!username) {
+//       toast.error("No username found in local storage.");
+//       return;
+//     }
+//     try {
+//       const response = await axios.post(
+//         "https://magicword.onrender.com/api/users/add-heart-slot",
+//         { username }
+//       );
+//       toast.success(response.data.message || "Email sent!");
+//     } catch (error) {
+//       const errorMessage =
+//         error.response?.data?.message || error.message || "Unknown error";
+//       toast.error(`Failed to add heart slot: ${errorMessage}`);
+//     }
+//   };
 
-        // Update state with points added
-        setPointsAdded(randomPoints);
-      } catch (error) {
-        console.error("Failed to add points to the user.", error);
-      }
-    }
+//   return (
+//     <div className="flex flex-wrap justify-evenly items-center mx-4 md:mx-16 gap-4">
+//       {/* Recharge Button */}
+//       <button onClick={() => setIsModalOpen(true)} className="w-full md:w-[430px]">
+//         <div className="p-2 text-lg md:text-2xl text-white bg-[#1e1e3a] rounded-2xl flex justify-between items-center gap-4">
+//           <div className="flex gap-[4px] items-center">
+//             {Array.from({ length: heartCount }).map((_, index) => (
+//               <FontAwesomeIcon
+//                 key={index}
+//                 icon={faHeart}
+//                 className="w-4 md:w-5"
+//                 beat
+//                 fade
+//                 style={{ color: "#f70a79" }}
+//               />
+//             ))}
+//           </div>
+//           <span>Recharge</span>
+//         </div>
+//       </button>
 
-    // Check if the password is correct
-    if (selected && password === selected.password) {
-      setResponseMessage("Correct password! Reward unlocked.");
-      setIsCorrect(true);
-      setIsPasswordIncorrect(false); // Set to false on correct password
-      try {
-        await axios.delete(
-          `https://magicword.onrender.com/api/users/reward/${selected._id}`
-        );
-        setRewards(rewards.filter((reward) => reward._id !== selected._id));
-        setSelectedReward("");
-        setPassword("");
-      } catch (error) {
-        setResponseMessage("Failed to delete the reward.");
-      }
-    } else {
-      setResponseMessage("Incorrect password. Points have been added!");
-      setIsCorrect(false);
-      setIsPasswordIncorrect(true); // Set to true on incorrect password
-    }
+//       {/* Task Button */}
+//       <button
+//         onClick={() => setIsModalOpen1(true)}
+//         className="w-full md:w-[430px] p-2 text-lg md:text-2xl text-white bg-[#1e1e3a] rounded-2xl flex justify-center"
+//       >
+//         Task
+//       </button>
 
-    // Open the response modal
-    setIsResponseModalOpen(true);
+//       {/* Leaderboard Button */}
+//       <button
+//         onClick={() => setIsModalOpen2(true)}
+//         className="w-full md:w-[430px] p-2 text-lg md:text-2xl text-white bg-[#1e1e3a] rounded-2xl flex justify-center"
+//       >
+//         Leaderboard
+//       </button>
 
-    // Hide the response message after 1 second
-    setTimeout(() => {
-      setIsResponseModalOpen(false);
-    }, 1000);
-  };
+//       {/* Modals */}
+//       {isModalOpen && (
+//         <Modal ref={modalRef} title="Recharge" content={/* Recharge Content */} />
+//       )}
+//       {isModalOpen1 && (
+//         <Modal ref={modalRef} title="Tasks" content={/* Tasks Content */} />
+//       )}
+//       {isModalOpen2 && (
+//         <Modal
+//           ref={modalRef}
+//           title="Leaderboard"
+//           content={
+//             leaderboardData.length > 0 ? (
+//               leaderboardData.map((item, index) => (
+//                 <div key={index} className="flex justify-between">
+//                   <span>{index + 1}</span>
+//                   <span>{item.username}</span>
+//                   <span>{item.points}</span>
+//                 </div>
+//               ))
+//             ) : (
+//               <p>No leaderboard data available.</p>
+//             )
+//           }
+//         />
+//       )}
 
-  const tryAgain = () => {
-    setIsModalOpen(true); // Reopen the reward selection modal
-    setPassword(""); // Clear the password input
-  };
+//       <ToastContainer />
+//     </div>
+//   );
+// };
 
-  const contactToGetPrize = () => {
-    // Add logic to contact for the prize, e.g., opening a contact form or redirecting
-    alert("Contact us to get your prize!");
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        isModalOpen &&
-        modalRef.current &&
-        !modalRef.current.contains(event.target)
-      ) {
-        setIsModalOpen(false);
-      }
-    };
-
-    if (isModalOpen) {
-      fetchRewards();
-      window.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      window.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isModalOpen]);
-
-  return (
-    <div className="flex items-center justify-center">
-      <div className="flex flex-col gap-2">
-        <button
-          className="flex w-[529px] items-center justify-between p-4 text-3xl h-[76px] rounded-xl bg-[#1e1e3a]"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <input
-            placeholder="Choose reward"
-            value={selectedReward}
-            readOnly
-            className="flex w-[529px] items-center justify-between text-3xl h-[76px] rounded-xl bg-[#1e1e3a] cursor-pointer"
-            type="text"
-          />
-          <img
-            src="downarrowinput.gif"
-            className="w-[43px] h-[48px]"
-            alt="Down Arrow"
-          />
-        </button>
-        <input
-          className="flex w-[529px] items-center justify-between p-4 text-3xl h-[76px] rounded-xl bg-[#1e1e3a]"
-          placeholder="Reward password"
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <button onClick={handlePostReward}>
-        <img
-          className="w-[230px] h-[160px]"
-          src="seemagic.png"
-          alt="See Magic"
-        />
-      </button>
-
-      {/* Rewards Selection Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-center bg-black bg-opacity-50 z-50">
-          <div
-            className="bg-[#1e1e3a] p-6 rounded-lg text-white max-w-xl w-full"
-            ref={modalRef}
-          >
-            <div className="flex justify-between items-center">
-              <button
-                onClick={() => setIsAddRewardModalOpen(true)}
-                className="text-1xl font-bold mb-4"
-              >
-                Become magician
-              </button>
-              <h2 className="text-2xl font-bold mb-4">Choose Your Reward</h2>
-            </div>
-            <div className="flex flex-col gap-2">
-              {rewards.map((reward) => (
-                <button
-                  key={reward._id}
-                  onClick={() => handleRewardClick(reward)}
-                  className="block w-full text-left py-2 px-4 rounded text-black bg-[#ffd704]"
-                >
-                  {reward.title}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Reward Modal */}
-      {isAddRewardModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-[#1e1e3a] p-6 rounded-lg text-white max-w-xl w-full">
-            <h2 className="text-2xl font-bold mb-4">Add New Reward</h2>
-            <input
-              type="text"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full mb-4 p-2 rounded bg-gray-800 text-white"
-            />
-            <input
-              type="text"
-              placeholder="Code"
-              value={titlePassword}
-              onChange={(e) => setTitlePassword(e.target.value)}
-              className="w-full mb-4 p-2 rounded bg-gray-800 text-white"
-            />
-            <button
-              onClick={addReward}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Add Reward
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Response Modal */}
-      {isResponseModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="p-6 rounded-lg text-center bg-red-500">
-            <p className="text-xl font-bold text-white">{responseMessage}</p>
-            {pointsAdded > 0 && (
-              <p className="text-lg text-white">
-                You have been awarded {pointsAdded} points!
-              </p>
-            )}
-            {/* Conditional Button Rendering */}
-            {isPasswordIncorrect ? (
-              <button
-                onClick={tryAgain}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Try Again
-              </button>
-            ) : (
-              <button
-                onClick={contactToGetPrize}
-                className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
-              >
-                Contact to Get Prize
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Newwizardhome;
+// export default Wizardheader;

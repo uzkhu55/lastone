@@ -44,7 +44,7 @@ const Wizardfooter = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setIsLoggedIn(false);
-    router.push("/");
+    router.push("/"); // Redirect to homepage or login page
   };
 
   useEffect(() => {
@@ -146,36 +146,36 @@ const Wizardfooter = () => {
   };
 
   return (
-    <div className="flex justify-evenly items-center mx-16">
+    <div className="flex flex-wrap justify-evenly items-center mx-4 sm:mx-8 gap-4 lg:mx-16">
       <button
         onClick={() => setIsModalOpen1(true)}
-        className="p-2 px-8 text-2xl text-white w-[430px] justify-center mb-6 bg-[#1e1e3a] rounded-2xl flex gap-[100px]"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white md:mb-4 w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Winners
       </button>
       <button
         onClick={() => setIsModalOpen2(true)}
-        className="p-2 px-8 text-2xl text-white w-[430px] justify-center bg-[#1e1e3a] mb-6 rounded-2xl flex gap-[100px]"
+        className="p-2 px-8 md:text-2xl md:h-[48px] md:mb-4 text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Updates
       </button>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="p-2 px-8 text-2xl text-white w-[430px] justify-center bg-[#1e1e3a] mb-6 rounded-2xl flex gap-[100px]"
+        className="p-2 px-8 md:text-2xl md:h-[48px] md:mb-4 text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Profile
       </button>
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-end px-[90px] bg-opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center justify-center px-4 sm:px-[90px] bg-opacity-100 z-50">
           <div
             ref={modalRef}
-            className="bg-[#1e1e3a] p-6 rounded-lg text-white h-[80%] max-w-[430px] w-full"
+            className="bg-[#1e1e3a] p-4 sm:p-6 rounded-lg text-white h-[60%] flex flex-col justify-between sm:h-[80%] w-[95%] sm:max-w-[430px]"
           >
             <div className="flex justify-between items-center">
               <div>
                 {imageExists ? (
                   <img
-                    className="w-[75px] h-[75px] rounded-full"
+                    className="w-[50px] sm:w-[75px] h-[50px] sm:h-[75px] rounded-full"
                     src={uploadImages[0]}
                     alt="Profile"
                   />
@@ -184,94 +184,20 @@ const Wizardfooter = () => {
                     type="file"
                     multiple
                     onChange={handleImageUpload}
-                    className="w-[100px]"
+                    className="w-[75px]"
                   />
                 )}
               </div>
-              {/* Display the username from local storage */}
-              <div className="font-extrabold">{adminUsername || "ADMIN"}</div>
+              <div className="font-extrabold text-sm sm:text-lg">
+                {adminUsername || "ADMIN"}
+              </div>
             </div>
-            <div className="flex mt-4 flex-col items-center justify-between h-[80%] pt-4 gap-2">
-              <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                Add Reward
-              </button>
-              <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                Give Points
-              </button>
-              <input
-                type="text"
-                value={usernameToSearch}
-                onChange={(e) => setUsernameToSearch(e.target.value)}
-                placeholder="          Enter username"
-                className="w-[363px] h-[53px] p-2  rounded-lg font-extrabold text-2xl bg-[#000122]"
-              />
-              <button
-                className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]"
-                onClick={handleAddHeartSlot}
-              >
-                Add Heart Slot
-              </button>
-              {feedbackMessage && <p>{feedbackMessage}</p>}
-              {userDetails && (
-                <div className="flex flex-col text-white">
-                  <p>Username: {userDetails.username}</p>
-                  <p>Email: {userDetails.email}</p>
-                  <p>Points: {userDetails.points}</p>
-                  {/* Add more fields as necessary */}
-                </div>
-              )}
-              <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
-                Settings
-              </button>
-              <button
-                onClick={handleLogout}
-                className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]"
-              >
-                Exit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {isModalOpen1 && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-start px-[90px] bg-opacity-100 z-50">
-          <div
-            ref={modalRef}
-            className="bg-[#1e1e3a] rounded-lg text-white h-[80%] max-w-[430px] w-full"
-          >
-            <div className="flex justify-center mt-4 gap-12 items-center">
-              <h2 className="text-2xl font-bold">#</h2>
-              <h2 className="text-2xl font-bold">Name</h2>
-              <h2 className="text-2xl font-bold">Rewards</h2>
-              <h2 className="text-2xl font-bold">When</h2>
-            </div>
-            <div className="flex mt-4 items-start justify-around bg-white text-black h-[80%] pt-4 gap-2">
-              <h2 className="text-2xl font-bold">1</h2>
-              <h2 className="text-2xl font-bold ">Jak</h2>
-              <h2 className="text-2xl ml-4 font-bold">9$</h2>
-              <h2 className="text-md font-bold">10.10.2024</h2>
-            </div>
-          </div>
-        </div>
-      )}
-      {isModalOpen2 && (
-        <div className="fixed inset-0 flex items-center gap-4 justify-center px-[90px] bg-opacity-100 z-50">
-          <div
-            ref={modalRef}
-            className="bg-[#1e1e3a] rounded-lg text-white h-[80%] max-w-[430px] w-full"
-          >
-            <div className="flex justify-center mt-4 gap-12 items-center">
-              <h2 className="text-2xl font-bold">#</h2>
-              <h2 className="text-2xl font-bold">Name</h2>
-              <h2 className="text-2xl font-bold">Points</h2>
-              <h2 className="text-2xl font-bold">Rewards</h2>
-            </div>
-            <div className="flex mt-4 items-start justify-evenly bg-white text-black h-[80%] pt-4 gap-2">
-              <h2 className="text-2xl font-bold">1</h2>
-              <h2 className="text-2xl font-bold">Jak</h2>
-              <h2 className="text-2xl font-bold">9$</h2>
-              <h2 className="text-2xl font-bold">10</h2>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="mt-4 p-2 px-8 text-white bg-red-600 rounded-2xl"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}
