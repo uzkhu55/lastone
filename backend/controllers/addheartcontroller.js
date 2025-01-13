@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // true for 465, false for other ports
   auth: {
     user: "uzkhuthef@gmail.com", // Your Gmail address
-    pass: "isks vchs wpzp vtxk", // Your Gmail app password
+    pass: "isks vchs wpzp vtxk",
   },
 });
 
@@ -16,7 +16,7 @@ const sendEmail = async (username) => {
     from: "uzkhuthef@gmail.com", // Your Gmail address
     to: "uzkhuthef@gmail.com", // Recipient address (your email)
     subject: "Heart Slot Added", // Subject line
-    text: `User ${username} wanted to heart slot.`, // Email body with username
+    text: `User ${username} wanted to heart slot.`,
   };
 
   try {
