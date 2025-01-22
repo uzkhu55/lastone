@@ -11,7 +11,6 @@ export const getLeaderboard = async (req, res) => {
       return res.status(404).json({ message: "No users found" });
     }
 
-    // Map to a desired structure if needed
     const leaderboard = users.map((user, index) => ({
       rank: index + 1,
       username: user.username,

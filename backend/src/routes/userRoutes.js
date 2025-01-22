@@ -14,10 +14,12 @@ import { getUserByUsername } from "../../controllers/getusernamecontroller.js";
 import { addPoints } from "../../controllers/addpointscontroler.js";
 import { heartDecrController } from "../../controllers/hearDecrController.js";
 import { getLeaderboard } from "../../controllers/getLeaderbaordcontroller.js";
+import { sendEmail } from "../../controllers/mailsendercontroller.js";
 
 const router = Router();
 
 router.post("/add-heart-slot", addHeartSlot);
+router.post("/mail", sendEmail);
 router.post("/admin-heart-slot", adminHeartSlot);
 router.get("/heart-count", getHeartCount);
 router.get("/qr", qrcontroller);
