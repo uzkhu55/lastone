@@ -21,7 +21,6 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
       );
       setLeaderboardData(response.data); // Assuming your API returns an array of leaderboard items
     } catch (error) {
-      // Initialize the error message
       let errorMessage = "Failed to load leaderboard data.";
 
       // Check for response from the server
@@ -64,11 +63,10 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
     }
   );
   const fetchHeartCount = async () => {
-    // Retrieve the logged-in username from local storage
     const loggedInUsername = localStorage.getItem("username");
 
     if (!loggedInUsername) {
-      setHeartCount(0); // Optionally reset heart count if no user is logged in
+      setHeartCount(0);
       return;
     }
 
@@ -135,22 +133,14 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
     const username = localStorage.getItem("username"); // Retrieve username from local storage
     console.log("Username retrieved from localStorage:", username); // Log the username
 
-    if (!username) {
-      toast.error("No username found in local storage."); // Show error toast
-      return; // Exit if username is not found
-    }
-
     try {
       const response = await axios.post(
-        "https://magicword.onrender.com/api/users/add-heart-slot",
+        "http://localhost:8000/api/users/mail",
         { username }
       );
-
-      if (response.data.message === "Heart slot added successfully") {
-        toast.success("Email sent!"); // Show success toast
-      } else {
-        toast.error("Failed to add heart slot: " + response.data.message); // Show error toast
-      }
+      console.log(response); // Log the response
+      alert("Email sent");
+      // toast.success("Email sent!");
     } catch (error) {
       console.error(
         "Error adding heart slot:",
@@ -158,7 +148,7 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
       );
       toast.error(
         "Failed to add heart slot: " +
-          (error.response ? error.response.data.message : "Unknown error") // Show error toast
+          (error.response ? error.response.data.message : "Unknown error")
       );
     }
   };

@@ -2,7 +2,7 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify"; // Import toast
@@ -35,6 +35,8 @@ const Wizardfooter = () => {
   // Get username from local storage on component mount
   useEffect(() => {
     const username = localStorage.getItem("username");
+    console.log(username);
+
     if (username) {
       setAdminUsername(username); // Set the admin username state
     }
@@ -44,7 +46,7 @@ const Wizardfooter = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setIsLoggedIn(false);
-    router.push("/"); // Redirect to homepage or login page
+    router.push("/");
   };
 
   useEffect(() => {
@@ -146,36 +148,36 @@ const Wizardfooter = () => {
   };
 
   return (
-    <div className="flex flex-wrap justify-evenly items-center mx-4 sm:mx-8 gap-4 lg:mx-16">
+    <div className="flex flex-wrap justify-evenly md:mb-8 items-center mx-4 sm:mx-8 gap-4 lg:mx-16">
       <button
         onClick={() => setIsModalOpen1(true)}
-        className="p-2 px-8 md:text-2xl md:h-[48px] text-white md:mb-4 w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Winners
       </button>
       <button
         onClick={() => setIsModalOpen2(true)}
-        className="p-2 px-8 md:text-2xl md:h-[48px] md:mb-4 text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Updates
       </button>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="p-2 px-8 md:text-2xl md:h-[48px] md:mb-4 text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
+        className="p-2 px-8 md:text-2xl md:h-[48px] text-white w-[380px] h-[30px] text-sm justify-center md:mt-6 bg-[#1e1e3a] rounded-2xl flex"
       >
         Profile
       </button>
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center px-4 sm:px-[90px] bg-opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center gap-4 justify-start w-[414px] md:w-[580px] md:px-[90px] bg-opacity-100 z-50">
           <div
             ref={modalRef}
-            className="bg-[#1e1e3a] p-4 sm:p-6 rounded-lg text-white h-[60%] flex flex-col justify-between sm:h-[80%] w-[95%] sm:max-w-[430px]"
+            className="bg-[#1e1e3a] p-6 rounded-lg text-white h-[80%] max-w-[430px] w-full"
           >
             <div className="flex justify-between items-center">
               <div>
                 {imageExists ? (
                   <img
-                    className="w-[50px] sm:w-[75px] h-[50px] sm:h-[75px] rounded-full"
+                    className="w-[75px] h-[75px] rounded-full"
                     src={uploadImages[0]}
                     alt="Profile"
                   />
@@ -184,20 +186,52 @@ const Wizardfooter = () => {
                     type="file"
                     multiple
                     onChange={handleImageUpload}
-                    className="w-[75px]"
+                    className="w-[100px]"
                   />
                 )}
               </div>
-              <div className="font-extrabold text-sm sm:text-lg">
-                {adminUsername || "ADMIN"}
-              </div>
+              <div className="font-extrabold">{adminUsername || "Admin"}</div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="mt-4 p-2 px-8 text-white bg-red-600 rounded-2xl"
-            >
-              Logout
-            </button>
+            {adminUsername === "Admin" ? (
+              <div className="flex mt-4 flex-col items-center justify-between h-[80%] pt-4 gap-2">
+                <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
+                  Add Reward
+                </button>
+                <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
+                  Give Points
+                </button>
+                <input
+                  type="text"
+                  value={usernameToSearch}
+                  onChange={(e) => setUsernameToSearch(e.target.value)}
+                  placeholder="          Enter username"
+                  className="w-[363px] h-[53px] p-2 rounded-lg font-extrabold text-2xl bg-[#000122]"
+                />
+                <button
+                  className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]"
+                  onClick={handleAddHeartSlot}
+                >
+                  Add Heart Slot
+                </button>
+                {feedbackMessage && <p>{feedbackMessage}</p>}
+                {userDetails && (
+                  <div className="flex flex-col text-white">
+                    <p>Username: {userDetails.username}</p>
+                    <p>Email: {userDetails.email}</p>
+                    <p>Points: {userDetails.points}</p>
+                  </div>
+                )}
+                <button className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]">
+                  Settings
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-[363px] h-[53px] rounded-lg font-extrabold text-2xl bg-[#000122]"
+                >
+                  Exit
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
