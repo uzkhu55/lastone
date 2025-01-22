@@ -135,7 +135,7 @@ const Wizardheader = ({ username, setHeartCount, heartCount }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/users/mail",
+        "https://magicword.onrender.com/api/users/mail",
         { username }
       );
       console.log(response); // Log the response
